@@ -176,7 +176,11 @@ public class Fitness {
 		BigInteger standardDeviation;
 		if(generation <= MAX_GENERATION_ESTIMATOR) {
 			// special case on initial samples to estimate standard deviation with sub-samples via CLT
-			standardDeviation = Util.sqrt(sumErrorM2Estimator.divide(count.subtract(Constants.I0)));
+			BigInteger varianceDivisor = count.subtract(Constants.I1);
+			if(varianceDivisor.compareTo(Constants.I0) <= 0) {
+				varianceDivisor = Constants.I1;
+			}
+			standardDeviation = Util.sqrt(sumErrorM2Estimator.divide(varianceDivisor));
 			standardDeviation = standardDeviation.divide(Util.sqrt(count));
 		} else {
 			standardDeviation = Util.sqrt(sumErrorM2.divide(BigInteger.valueOf(generation-1)));
