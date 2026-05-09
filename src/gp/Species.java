@@ -202,10 +202,15 @@ public class Species implements Runnable {
 	}
 	
 	public void compilePopulation() { 
-		DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+		if(JAVA_COMPILER == null) {
+			LOGGER.severe("Must use JDK (Java bin directory must contain javac)");
+			listProgramPopulation.clear();
+			return;
+		}
 		Iterator<Program> iteratorProgram = listProgramPopulation.iterator(); 
 		while(iteratorProgram.hasNext()) {
 			Program program = iteratorProgram.next();
+			DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 			try (StandardJavaFileManager standardJavaFileManager = JAVA_COMPILER.getStandardFileManager(diagnostics, Locale.ENGLISH, null)) {
 				Iterable<Program> javaFileObject = Arrays.asList(program);
 				ProgramClassSimpleJavaFileObject programClassSimpleJavaFileObject = null;
@@ -214,6 +219,7 @@ public class Species implements Runnable {
 				} catch (Exception e) {
 					iteratorProgram.remove();
 					e.printStackTrace();
+					continue;
 				}
 				ProgramForwardingJavaFileManager programForwardingJavaFileManager = new ProgramForwardingJavaFileManager(standardJavaFileManager, programClassSimpleJavaFileObject, program.programClassLoader);
 				CompilationTask compilerTask = JAVA_COMPILER.getTask(null, programForwardingJavaFileManager, diagnostics, null, null, javaFileObject);
