@@ -170,7 +170,7 @@ public class Species implements Runnable {
 		}
 		for(Program program : listProgram) {
 			Program program1 = program;
-			if(random.nextInt() % PARENT_FACTOR == 0) {
+			if(random.nextInt(PARENT_FACTOR) == 0) {
 				if(listProgramChampion.size() > indexParent) {
 					// use champion instead of parent, same index thus same category
 					program1 = listProgramChampion.get(indexParent);
@@ -178,8 +178,8 @@ public class Species implements Runnable {
 			}
 			for(int indexChild=0; indexChild<MAX_CHILDREN; indexChild++) {
 				Program program2 = null;	// program2==null means mutate
-				if(random.nextInt() % MUTATE_FACTOR == 0) {
-					if(random.nextInt() % PARENT_FACTOR == 0) {
+				if(random.nextInt(MUTATE_FACTOR) == 0) {
+					if(random.nextInt(PARENT_FACTOR) == 0) {
 						if(!listProgramChampion.isEmpty()) {
 							// program2 is champion crossover
 							program2 = listProgramChampion.get(random.nextInt(listProgramChampion.size()));
